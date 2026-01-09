@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceHub - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>FinanceHub</h2>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link active">Dashboard</a>
+            <a href="/trade" class="nav-link">Trading</a>
+            <a href="/expenses" class="nav-link">Expenses</a>
+            <a href="/learn" class="nav-link">AI Advisor</a>
+            <a href="/profile" class="nav-link">Profile</a>
+            <a href="/logout" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Welcome to Your Financial Dashboard</h1>
+            <div class="wallet-info">
+                <div class="wallet-card">
+                    <h3>Wallet Balance</h3>
+                    <p class="balance" id="walletBalance">₹0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <div class="quick-actions">
+                    <a href="/trade" class="action-btn">Start Trading</a>
+                    <a href="/expenses" class="action-btn">Add Expense</a>
+                    <button class="action-btn" onclick="addMoney()">Add Money</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Weekly Expenses</h3>
+                <canvas id="expenseChart" width="400" height="200"></canvas>
+            </div>
+
+            <div class="card">
+                <h3>Market Overview</h3>
+                <div id="marketData" class="market-data">
+                    <div class="loading">Loading market data...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Recent Activity</h3>
+                <div id="recentActivity" class="activity-list">
+                    <div class="loading">Loading activities...</div>
+                </div>
+            </div>
+
+            <div class="card savings-insights">
+                <h3>Savings Insights</h3>
+                <div id="savingsInsights">
+                    <div class="insight-item">
+                        <span class="insight-icon">💡</span>
+                        <p>Track your expenses to get personalized insights</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load wallet balance
+        async function loadWalletBalance() {
+            try {
+                const response = await fetch('/api/wallet');
+                const data = await response.json();
+                document.getElementById('walletBalance').textContent = `₹${data.balance.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error loading wallet balance:', error);
+            }
+        }
+
+        // Load weekly expenses chart
+        async function loadExpenseChart() {
+            try {
+                const response = await fetch('/api/expenses/weekly');
+                const data = await response.json();
+                
+                const ctx = document.getElementById('expenseChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(data),
+                        datasets: [{
+                            label: 'Weekly Expenses',
+                            data: Object.values(data),
+                            backgroundColor: [
+                                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading expense chart:', error);
+            }
+        }
+
+        // Load market data
+        async function loadMarketData() {
+            try {
+                const response = await fetch('/api/market-data');
+                const data = await response.json();
+                
+                const marketContainer = document.getElementById('marketData');
+                marketContainer.innerHTML = '';
+                
+                Object.entries(data).slice(0, 5).forEach(([symbol, info]) => {
+                    const item = document.createElement('div');
+                    item.className = 'market-item';
+                    item.innerHTML = `
+                        <span class="symbol">${symbol}</span>
+                        <span class="price">₹${info.price}</span>
+                        <span class="change ${info.change >= 0 ? 'positive' : 'negative'}">
+                            ${info.change >= 0 ? '+' : ''}${info.change}%
+                        </span>
+                    `;
+                    marketContainer.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading market data:', error);
+            }
+        }
+
+        // Add money to wallet
+        function addMoney() {
+            const amount = prompt('Enter amount to add:');
+            if (amount && !isNaN(amount)) {
+                // Mock add money functionality
+                alert(`₹${amount} added to wallet successfully!`);
+                loadWalletBalance();
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWalletBalance();
+            loadExpenseChart();
+            loadMarketData();
+        });
+    </script>
+</body>
+</html>

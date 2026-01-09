@@ -1,0 +1,427 @@
+/* Expenses Page Styles */
+
+.expenses-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.expenses-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.add-expense-btn {
+    background: var(--success-color);
+    color: var(--text-white);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.add-expense-btn:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Expense Form */
+.expense-form-container {
+    margin-bottom: 2rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.expense-form {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}
+
+.expense-form h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.submit-btn {
+    flex: 1;
+    background: var(--success-color);
+    color: var(--text-white);
+    padding: 0.875rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+}
+
+.cancel-btn {
+    flex: 1;
+    background: var(--text-muted);
+    color: var(--text-white);
+    padding: 0.875rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background: #6b7280;
+}
+
+/* Expenses Content */
+.expenses-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+/* Analytics Section */
+.expenses-analytics {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.chart-container {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.chart-container h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    text-align: center;
+}
+
+.chart-container canvas {
+    max-height: 300px;
+}
+
+/* Expenses List */
+.expenses-list {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    height: fit-content;
+}
+
+.expenses-list h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.expense-filters {
+    margin-bottom: 1rem;
+}
+
+.expense-filters select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.expenses-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.2s ease;
+}
+
+.expense-item:hover {
+    background: var(--bg-tertiary);
+    transform: translateX(4px);
+}
+
+.expense-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.expense-category {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.expense-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.expense-date {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.expense-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.expense-amount {
+    font-weight: 700;
+    color: var(--danger-color);
+    font-size: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.edit-btn, .delete-btn {
+    padding: 0.25rem 0.75rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-btn {
+    background: var(--primary-color);
+    color: var(--text-white);
+}
+
+.edit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.delete-btn {
+    background: var(--danger-color);
+    color: var(--text-white);
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.no-expenses {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Savings Insights */
+.savings-insights {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    margin-top: 2rem;
+    grid-column: 1 / -1;
+}
+
+.savings-insights h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    text-align: center;
+}
+
+.insights-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.insight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border-radius: var(--radius-md);
+    border: 1px solid #bae6fd;
+}
+
+.insight-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.insight-item p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-size: 0.875rem;
+}
+
+/* Category Colors */
+.expense-item[data-category="Food"] {
+    border-left-color: #ef4444;
+}
+
+.expense-item[data-category="Transport"] {
+    border-left-color: #3b82f6;
+}
+
+.expense-item[data-category="Subscriptions"] {
+    border-left-color: #8b5cf6;
+}
+
+.expense-item[data-category="Shopping"] {
+    border-left-color: #f59e0b;
+}
+
+.expense-item[data-category="Trading fees"] {
+    border-left-color: #10b981;
+}
+
+.expense-item[data-category="Miscellaneous"] {
+    border-left-color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .expenses-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .expenses-analytics {
+        order: 2;
+    }
+    
+    .expenses-list {
+        order: 1;
+    }
+    
+    .savings-insights {
+        order: 3;
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .expenses-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .expenses-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .expense-form {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .insights-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .expenses-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .expense-form {
+        padding: 1rem;
+    }
+    
+    .expense-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .expense-actions {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .action-buttons {
+        gap: 0.25rem;
+    }
+    
+    .edit-btn, .delete-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .insight-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+}

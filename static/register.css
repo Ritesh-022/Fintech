@@ -1,0 +1,64 @@
+/* Register Page Styles - Extends Login Styles */
+
+@import url('login.css');
+
+/* Additional styles specific to registration */
+.auth-card {
+    max-width: 450px;
+}
+
+.welcome-bonus {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.welcome-bonus h3 {
+    font-size: 1.1rem;
+}
+
+/* Form validation styles */
+.form-group input:invalid {
+    border-color: var(--danger-color);
+}
+
+.form-group input:valid {
+    border-color: var(--success-color);
+}
+
+/* Password strength indicator */
+.password-strength {
+    margin-top: 0.5rem;
+    height: 4px;
+    background: var(--border-light);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.password-strength-fill {
+    height: 100%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.password-strength-fill.weak {
+    width: 33%;
+    background: var(--danger-color);
+}
+
+.password-strength-fill.medium {
+    width: 66%;
+    background: var(--warning-color);
+}
+
+.password-strength-fill.strong {
+    width: 100%;
+    background: var(--success-color);
+}

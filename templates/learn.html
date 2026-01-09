@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceHub - AI Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='learn.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>FinanceHub</h2>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/trade" class="nav-link">Trading</a>
+            <a href="/expenses" class="nav-link">Expenses</a>
+            <a href="/learn" class="nav-link active">AI Advisor</a>
+            <a href="/profile" class="nav-link">Profile</a>
+            <a href="/logout" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="advisor-header">
+            <h1>🤖 AI Financial Advisor</h1>
+            <p>Get personalized insights for trading and personal finance</p>
+        </div>
+
+        <div class="advisor-tabs">
+            <button class="tab-btn active" onclick="switchTab('market')">Market Advisor</button>
+            <button class="tab-btn" onclick="switchTab('finance')">Personal Finance</button>
+        </div>
+
+        <div class="advisor-content">
+            <div id="marketAdvisor" class="advisor-section">
+                <div class="advisor-card">
+                    <h3>📈 Market Analysis & Recommendations</h3>
+                    <div id="marketRecommendations" class="recommendations">
+                        <div class="loading">Analyzing market conditions...</div>
+                    </div>
+                </div>
+
+                <div class="advisor-card">
+                    <h3>🎯 Trading Signals</h3>
+                    <div id="tradingSignals" class="signals-list">
+                        <div class="loading">Generating trading signals...</div>
+                    </div>
+                </div>
+
+                <div class="advisor-card">
+                    <h3>⚠️ Risk Assessment</h3>
+                    <div id="riskAssessment" class="risk-info">
+                        <div class="loading">Calculating risk metrics...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="financeAdvisor" class="advisor-section" style="display: none;">
+                <div class="advisor-card">
+                    <h3>💰 Spending Analysis</h3>
+                    <div id="spendingAnalysis" class="analysis-content">
+                        <div class="loading">Analyzing your spending patterns...</div>
+                    </div>
+                </div>
+
+                <div class="advisor-card">
+                    <h3>💡 Savings Recommendations</h3>
+                    <div id="savingsRecommendations" class="recommendations">
+                        <div class="loading">Generating savings strategies...</div>
+                    </div>
+                </div>
+
+                <div class="advisor-card">
+                    <h3>🎯 Financial Goals</h3>
+                    <div id="financialGoals" class="goals-content">
+                        <div class="goal-item">
+                            <h4>Emergency Fund</h4>
+                            <div class="goal-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 25%"></div>
+                                </div>
+                                <span>₹2,500 / ₹10,000</span>
+                            </div>
+                        </div>
+                        
+                        <div class="goal-item">
+                            <h4>Investment Portfolio</h4>
+                            <div class="goal-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                                <span>₹6,000 / ₹10,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <h3>💬 Ask Your AI Advisor</h3>
+            <div class="chat-container">
+                <div id="chatMessages" class="chat-messages">
+                    <div class="message ai-message">
+                        <span class="message-icon">🤖</span>
+                        <div class="message-content">
+                            <p>Hello! I'm your AI Financial Advisor. Ask me anything about trading, investments, or personal finance!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ask me about your finances..." onkeypress="handleChatKeyPress(event)">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'market';
+
+        // Switch between advisor tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('marketAdvisor').style.display = tab === 'market' ? 'block' : 'none';
+            document.getElementById('financeAdvisor').style.display = tab === 'finance' ? 'block' : 'none';
+            
+            if (tab === 'market') {
+                loadMarketRecommendations();
+            } else {
+                loadFinanceAnalysis();
+            }
+        }
+
+        // Load market recommendations
+        async function loadMarketRecommendations() {
+            try {
+                const response = await fetch('/api/market-data');
+                const marketData = await response.json();
+                
+                // Generate market recommendations
+                const recommendations = generateMarketRecommendations(marketData);
+                document.getElementById('marketRecommendations').innerHTML = recommendations;
+                
+                // Generate trading signals
+                const signals = generateTradingSignals(marketData);
+                document.getElementById('tradingSignals').innerHTML = signals;
+                
+                // Generate risk assessment
+                const riskAssessment = generateRiskAssessment();
+                document.getElementById('riskAssessment').innerHTML = riskAssessment;
+                
+            } catch (error) {
+                console.error('Error loading market recommendations:', error);
+            }
+        }
+
+        // Generate market recommendations
+        function generateMarketRecommendations(marketData) {
+            const symbols = Object.keys(marketData).slice(0, 3);
+            let html = '';
+            
+            symbols.forEach(symbol => {
+                const data = marketData[symbol];
+                const action = data.change > 2 ? 'BUY' : data.change < -2 ? 'SELL' : 'HOLD';
+                const actionClass = action.toLowerCase();
+                
+                html += `
+                    <div class="recommendation-item">
+                        <div class="rec-header">
+                            <span class="symbol">${symbol}</span>
+                            <span class="action ${actionClass}">${action}</span>
+                        </div>
+                        <p class="rec-reason">
+                            ${action === 'BUY' ? 'Strong upward momentum with +' + data.change + '% change' :
+                              action === 'SELL' ? 'Bearish trend with ' + data.change + '% decline' :
+                              'Sideways movement, wait for clear direction'}
+                        </p>
+                        <div class="rec-details">
+                            <span>Current Price: ₹${data.price}</span>
+                            <span>Target: ₹${(data.price * (action === 'BUY' ? 1.1 : action === 'SELL' ? 0.9 : 1)).toFixed(2)}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+
+        // Generate trading signals
+        function generateTradingSignals(marketData) {
+            const signals = [
+                { symbol: 'AAPL', signal: 'Strong Buy', confidence: '85%', reason: 'Technical breakout above resistance' },
+                { symbol: 'BTC', signal: 'Hold', confidence: '70%', reason: 'Consolidation phase, wait for direction' },
+                { symbol: 'GOOGL', signal: 'Buy', confidence: '75%', reason: 'Positive earnings momentum' }
+            ];
+            
+            return signals.map(signal => `
+                <div class="signal-item">
+                    <div class="signal-header">
+                        <span class="symbol">${signal.symbol}</span>
+                        <span class="signal ${signal.signal.toLowerCase().replace(' ', '-')}">${signal.signal}</span>
+                    </div>
+                    <div class="signal-details">
+                        <span class="confidence">Confidence: ${signal.confidence}</span>
+                        <p class="reason">${signal.reason}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generate risk assessment
+        function generateRiskAssessment() {
+            return `
+                <div class="risk-item">
+                    <h4>Portfolio Risk Level: <span class="risk-moderate">Moderate</span></h4>
+                    <p>Your current trading activity shows moderate risk exposure.</p>
+                </div>
+                <div class="risk-item">
+                    <h4>Diversification Score: <span class="score">7/10</span></h4>
+                    <p>Good diversification across sectors. Consider adding commodities.</p>
+                </div>
+                <div class="risk-item">
+                    <h4>Volatility Alert</h4>
+                    <p>Market volatility is currently high. Consider reducing position sizes.</p>
+                </div>
+            `;
+        }
+
+        // Load finance analysis
+        async function loadFinanceAnalysis() {
+            try {
+                const response = await fetch('/api/expenses');
+                const expenses = await response.json();
+                
+                // Generate spending analysis
+                const spendingAnalysis = generateSpendingAnalysis(expenses);
+                document.getElementById('spendingAnalysis').innerHTML = spendingAnalysis;
+                
+                // Generate savings recommendations
+                const savingsRecs = generateSavingsRecommendations(expenses);
+                document.getElementById('savingsRecommendations').innerHTML = savingsRecs;
+                
+            } catch (error) {
+                console.error('Error loading finance analysis:', error);
+            }
+        }
+
+        // Generate spending analysis
+        function generateSpendingAnalysis(expenses) {
+            if (expenses.length === 0) {
+                return '<p>No expense data available. Start tracking your expenses to get insights!</p>';
+            }
+            
+            const categoryTotals = {};
+            let totalSpending = 0;
+            
+            expenses.forEach(expense => {
+                categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + parseFloat(expense.amount);
+                totalSpending += parseFloat(expense.amount);
+            });
+            
+            const topCategory = Object.keys(categoryTotals).reduce((a, b) => 
+                categoryTotals[a] > categoryTotals[b] ? a : b
+            );
+            
+            return `
+                <div class="analysis-item">
+                    <h4>Total Monthly Spending: ₹${totalSpending.toFixed(2)}</h4>
+                    <p>Your highest spending category is <strong>${topCategory}</strong> (₹${categoryTotals[topCategory].toFixed(2)})</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Spending Pattern</h4>
+                    <p>You have ${Object.keys(categoryTotals).length} active spending categories.</p>
+                </div>
+                <div class="analysis-item">
+                    <h4>Weekly Average</h4>
+                    <p>₹${(totalSpending / 4).toFixed(2)} per week</p>
+                </div>
+            `;
+        }
+
+        // Generate savings recommendations
+        function generateSavingsRecommendations(expenses) {
+            const recommendations = [
+                {
+                    icon: '🍽️',
+                    title: 'Food Expenses',
+                    suggestion: 'Cook at home 2 more days per week to save ₹800/month',
+                    impact: 'High Impact'
+                },
+                {
+                    icon: '📱',
+                    title: 'Subscriptions',
+                    suggestion: 'Review and cancel unused subscriptions to save ₹300/month',
+                    impact: 'Medium Impact'
+                },
+                {
+                    icon: '🚗',
+                    title: 'Transportation',
+                    suggestion: 'Use public transport twice a week to save ₹400/month',
+                    impact: 'Medium Impact'
+                },
+                {
+                    icon: '💰',
+                    title: 'Auto-Save',
+                    suggestion: 'Set up automatic savings of 20% from your wallet balance',
+                    impact: 'High Impact'
+                }
+            ];
+            
+            return recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <div class="rec-header">
+                        <span class="rec-icon">${rec.icon}</span>
+                        <span class="rec-title">${rec.title}</span>
+                        <span class="impact ${rec.impact.toLowerCase().replace(' ', '-')}">${rec.impact}</span>
+                    </div>
+                    <p class="rec-suggestion">${rec.suggestion}</p>
+                </div>
+            `).join('');
+        }
+
+        // Handle chat functionality
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addChatMessage(message, 'user');
+            
+            // Clear input
+            input.value = '';
+            
+            // Generate AI response
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addChatMessage(response, 'ai');
+            }, 1000);
+        }
+
+        function addChatMessage(message, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            messageDiv.innerHTML = `
+                <span class="message-icon">${sender === 'ai' ? '🤖' : '👤'}</span>
+                <div class="message-content">
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateAIResponse(userMessage) {
+            const responses = {
+                'trading': 'Based on current market conditions, I recommend diversifying your portfolio with 60% stocks, 30% crypto, and 10% commodities. Always use stop-loss orders to manage risk.',
+                'save': 'To increase your savings, try the 50/30/20 rule: 50% needs, 30% wants, 20% savings. Start with small amounts and gradually increase.',
+                'invest': 'For beginners, consider starting with index funds or ETFs. They offer diversification and lower risk compared to individual stocks.',
+                'budget': 'Create a monthly budget by tracking all expenses for a week, then categorize them. Use the envelope method for discretionary spending.',
+                'default': 'I can help you with trading strategies, investment advice, budgeting tips, and savings recommendations. What specific area would you like to explore?'
+            };
+            
+            const lowerMessage = userMessage.toLowerCase();
+            
+            for (const [key, response] of Object.entries(responses)) {
+                if (lowerMessage.includes(key)) {
+                    return response;
+                }
+            }
+            
+            return responses.default;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMarketRecommendations();
+        });
+    </script>
+</body>
+</html>

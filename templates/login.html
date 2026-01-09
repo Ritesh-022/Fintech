@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceHub - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>FinanceHub</h1>
+                <p>Your Complete Financial Solution</p>
+            </div>
+            
+            <form method="POST" class="auth-form">
+                <h2>Login to Your Account</h2>
+                
+                {% if error %}
+                <div class="error-message">{{ error }}</div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="auth-btn">Login</button>
+                
+                <div class="auth-links">
+                    <p>Don't have an account? <a href="/register">Sign up here</a></p>
+                </div>
+            </form>
+            
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">📈</span>
+                    <span>Trading & Investments</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">💰</span>
+                    <span>Expense Tracking</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🤖</span>
+                    <span>AI Financial Advisor</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

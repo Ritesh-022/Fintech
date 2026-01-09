@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceHub - Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>FinanceHub</h2>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/trade" class="nav-link">Trading</a>
+            <a href="/expenses" class="nav-link">Expenses</a>
+            <a href="/learn" class="nav-link">AI Advisor</a>
+            <a href="/profile" class="nav-link active">Profile</a>
+            <a href="/logout" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <div class="avatar-circle">
+                    <span class="avatar-text">U</span>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1>User Profile</h1>
+                <p>Manage your account settings and preferences</p>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-section">
+                <h3>Account Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Username</label>
+                        <span>john_trader</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email</label>
+                        <span>john@example.com</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Member Since</label>
+                        <span>January 2024</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Account Status</label>
+                        <span class="status active">Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Wallet & Trading</h3>
+                <div class="wallet-stats">
+                    <div class="stat-card">
+                        <h4>Current Balance</h4>
+                        <p class="balance" id="walletBalance">₹0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Total Trades</h4>
+                        <p class="trades-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Portfolio Value</h4>
+                        <p class="portfolio-value">₹0.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Expense Summary</h3>
+                <div class="expense-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">This Month</span>
+                        <span class="summary-value" id="monthlyExpenses">₹0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">This Week</span>
+                        <span class="summary-value" id="weeklyExpenses">₹0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Average Daily</span>
+                        <span class="summary-value" id="dailyAverage">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Preferences</h3>
+                <div class="preferences-form">
+                    <div class="pref-item">
+                        <label for="currency">Preferred Currency</label>
+                        <select id="currency">
+                            <option value="INR">Indian Rupee (₹)</option>
+                            <option value="USD">US Dollar ($)</option>
+                            <option value="EUR">Euro (€)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="pref-item">
+                        <label for="notifications">Email Notifications</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Trading alerts
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Expense reminders
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox"> Market updates
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="pref-item">
+                        <label for="riskLevel">Risk Tolerance</label>
+                        <select id="riskLevel">
+                            <option value="conservative">Conservative</option>
+                            <option value="moderate" selected>Moderate</option>
+                            <option value="aggressive">Aggressive</option>
+                        </select>
+                    </div>
+                    
+                    <button class="save-btn">Save Preferences</button>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Security</h3>
+                <div class="security-options">
+                    <button class="security-btn">Change Password</button>
+                    <button class="security-btn">Enable 2FA</button>
+                    <button class="security-btn">Download Data</button>
+                </div>
+            </div>
+
+            <div class="profile-section danger-zone">
+                <h3>Danger Zone</h3>
+                <div class="danger-actions">
+                    <button class="danger-btn">Reset All Data</button>
+                    <button class="danger-btn">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load wallet balance
+        async function loadWalletBalance() {
+            try {
+                const response = await fetch('/api/wallet');
+                const data = await response.json();
+                document.getElementById('walletBalance').textContent = `₹${data.balance.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error loading wallet balance:', error);
+            }
+        }
+
+        // Load expense summary
+        async function loadExpenseSummary() {
+            try {
+                const response = await fetch('/api/expenses');
+                const expenses = await response.json();
+                
+                const now = new Date();
+                const thisMonth = now.getMonth();
+                const thisYear = now.getFullYear();
+                const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                
+                let monthlyTotal = 0;
+                let weeklyTotal = 0;
+                
+                expenses.forEach(expense => {
+                    const expenseDate = new Date(expense.date);
+                    const amount = parseFloat(expense.amount);
+                    
+                    // Monthly expenses
+                    if (expenseDate.getMonth() === thisMonth && expenseDate.getFullYear() === thisYear) {
+                        monthlyTotal += amount;
+                    }
+                    
+                    // Weekly expenses
+                    if (expenseDate >= oneWeekAgo) {
+                        weeklyTotal += amount;
+                    }
+                });
+                
+                const dailyAverage = monthlyTotal / now.getDate();
+                
+                document.getElementById('monthlyExpenses').textContent = `₹${monthlyTotal.toFixed(2)}`;
+                document.getElementById('weeklyExpenses').textContent = `₹${weeklyTotal.toFixed(2)}`;
+                document.getElementById('dailyAverage').textContent = `₹${dailyAverage.toFixed(2)}`;
+                
+            } catch (error) {
+                console.error('Error loading expense summary:', error);
+            }
+        }
+
+        // Save preferences
+        document.querySelector('.save-btn').addEventListener('click', function() {
+            // Mock save functionality
+            alert('Preferences saved successfully!');
+        });
+
+        // Security button handlers
+        document.querySelectorAll('.security-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent;
+                alert(`${action} functionality would be implemented here.`);
+            });
+        });
+
+        // Danger zone handlers
+        document.querySelectorAll('.danger-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent;
+                const confirmed = confirm(`Are you sure you want to ${action.toLowerCase()}? This action cannot be undone.`);
+                if (confirmed) {
+                    alert(`${action} functionality would be implemented here.`);
+                }
+            });
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWalletBalance();
+            loadExpenseSummary();
+        });
+    </script>
+</body>
+</html>

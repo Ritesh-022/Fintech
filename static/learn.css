@@ -1,0 +1,525 @@
+/* AI Advisor Page Styles */
+
+.advisor-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.advisor-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.advisor-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Advisor Tabs */
+.advisor-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    background: var(--bg-primary);
+    padding: 0.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.advisor-tabs .tab-btn {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.advisor-tabs .tab-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.advisor-tabs .tab-btn.active {
+    background: var(--primary-color);
+    color: var(--text-white);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Advisor Content */
+.advisor-content {
+    margin-bottom: 3rem;
+}
+
+.advisor-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.advisor-card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.advisor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.advisor-card h3 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Recommendations */
+.recommendations {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recommendation-item {
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.2s ease;
+}
+
+.recommendation-item:hover {
+    background: var(--bg-tertiary);
+    transform: translateX(4px);
+}
+
+.rec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.rec-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.rec-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.symbol {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.action {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.action.buy {
+    background: #dcfce7;
+    color: var(--success-color);
+}
+
+.action.sell {
+    background: #fef2f2;
+    color: var(--danger-color);
+}
+
+.action.hold {
+    background: #fef3c7;
+    color: var(--warning-color);
+}
+
+.rec-reason,
+.rec-suggestion {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.rec-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.impact {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.impact.high-impact {
+    background: #dcfce7;
+    color: var(--success-color);
+}
+
+.impact.medium-impact {
+    background: #fef3c7;
+    color: var(--warning-color);
+}
+
+.impact.low-impact {
+    background: #f1f5f9;
+    color: var(--text-muted);
+}
+
+/* Trading Signals */
+.signals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.signal-item {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+}
+
+.signal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.signal {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.signal.strong-buy {
+    background: #dcfce7;
+    color: var(--success-color);
+}
+
+.signal.buy {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.signal.hold {
+    background: #fef3c7;
+    color: var(--warning-color);
+}
+
+.signal-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.confidence {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.875rem;
+}
+
+.reason {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* Risk Assessment */
+.risk-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.risk-item {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.risk-item h4 {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.risk-moderate {
+    color: var(--warning-color);
+    font-weight: 600;
+}
+
+.score {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Analysis Content */
+.analysis-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.analysis-item {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--success-color);
+}
+
+.analysis-item h4 {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.analysis-item p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Financial Goals */
+.goals-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.goal-item {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.goal-item h4 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.goal-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--border-light);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--success-color);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Chat Section */
+.chat-section {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.chat-section h3 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    text-align: center;
+}
+
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.chat-messages {
+    height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-light);
+}
+
+.message {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.message-content {
+    flex: 1;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+}
+
+.ai-message .message-content {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+}
+
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.user-message .message-content {
+    background: var(--primary-color);
+    color: var(--text-white);
+}
+
+.message-content p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.chat-input {
+    display: flex;
+    gap: 1rem;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 0.875rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+}
+
+.chat-input button {
+    background: var(--primary-color);
+    color: var(--text-white);
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chat-input button:hover {
+    background: var(--primary-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .advisor-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .advisor-header h1 {
+        font-size: 2rem;
+    }
+    
+    .advisor-tabs {
+        max-width: none;
+        margin-bottom: 1.5rem;
+    }
+    
+    .advisor-card {
+        padding: 1.5rem;
+    }
+    
+    .rec-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .signal-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .goal-progress {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .chat-input {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .advisor-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .advisor-tabs {
+        flex-direction: column;
+    }
+    
+    .advisor-card {
+        padding: 1rem;
+    }
+    
+    .chat-section {
+        padding: 1rem;
+    }
+    
+    .chat-messages {
+        height: 250px;
+    }
+    
+    .message {
+        gap: 0.5rem;
+    }
+    
+    .message-content {
+        padding: 0.75rem;
+    }
+}
