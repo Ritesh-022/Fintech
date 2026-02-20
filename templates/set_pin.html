@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Set Transaction PIN - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0; max-width: 500px; margin: 0 auto;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 3rem;">Set Transaction PIN 🔐</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Set a 4-6 digit PIN for secure transactions. This PIN will be required for trading and sensitive operations.
+            </p>
+
+            <form method="POST" class="form">
+                <div class="form-group">
+                    <label class="form-label">Enter PIN (4-6 digits)</label>
+                    <input type="password" name="pin" class="form-control" placeholder="Enter digits only" maxlength="6" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm PIN</label>
+                    <input type="password" name="confirm_pin" class="form-control" placeholder="Re-enter PIN" maxlength="6" required>
+                </div>
+
+                <div style="background: var(--bg-elevated); padding: 1rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.875rem;">
+                    <p style="color: var(--text-secondary);">
+                        ⚠️ <strong>Remember your PIN!</strong> You'll need it for trading, fund transfers, and account changes.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Set PIN</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">Skip for Now</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Input validation
+    document.querySelector('input[name="pin"]').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length > 6) this.value = this.value.slice(0, 6);
+    });
+    
+    document.querySelector('input[name="confirm_pin"]').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length > 6) this.value = this.value.slice(0, 6);
+    });
+</script>
+{% endblock %}

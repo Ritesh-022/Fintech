@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 6rem 0; text-align: center; min-height: 60vh; display: flex; align-items: center; justify-content: center;">
+    <div>
+        <h1 style="font-size: 5rem; font-weight: 900; color: var(--danger); margin-bottom: 1rem;">500</h1>
+        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">Server Error</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.125rem;">
+            Oops! Something went wrong on our end. Our team has been notified.
+        </p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

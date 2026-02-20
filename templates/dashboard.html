@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <!-- Welcome Section -->
+    <div style="margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem;">
+            Welcome back, {{ session.username }}! 👋
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 1.125rem;">
+            Here's your financial overview for today
+        </p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <div class="stat-label">Main Wallet Balance</div>
+            <div class="stat-value">₹{{ "%.2f"|format(wallet['main_balance']) }}</div>
+            <div class="stat-change positive">
+                <span>↑</span> Available to spend
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Investment Balance</div>
+            <div class="stat-value">₹{{ "%.2f"|format(wallet['investment_balance']) }}</div>
+            <div class="stat-change positive">
+                <span>↑</span> Growing portfolio
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">This Month Expenses</div>
+            <div class="stat-value">₹{{ "%.2f"|format(monthly_expenses) }}</div>
+            <div class="stat-change {% if monthly_expenses < 10000 %}positive{% else %}negative{% endif %}">
+                {% if monthly_expenses < 10000 %}
+                <span>↓</span> Under control
+                {% else %}
+                <span>↑</span> Monitor closely
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Savings Balance</div>
+            <div class="stat-value">₹{{ "%.2f"|format(wallet['savings_balance']) }}</div>
+            <div class="stat-change positive">
+                <span>↑</span> Keep saving!
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-2" style="margin-top: 3rem;">
+        <!-- Recent Transactions -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Transactions</h3>
+                <a href="{{ url_for('wallet') }}" style="color: var(--primary); text-decoration: none; font-size: 0.875rem;">View All →</a>
+            </div>
+            <div class="card-body">
+                {% if transactions %}
+                    {% for transaction in transactions %}
+                    <div class="transaction-item">
+                        <div class="transaction-details">
+                            <div class="transaction-type">
+                                {{ transaction['description'] or transaction['type']|title }}
+                            </div>
+                            <div class="transaction-date">
+                                {{ transaction['timestamp'][:10] }}
+                            </div>
+                        </div>
+                        <div class="transaction-amount {% if transaction['type'] in ['deposit', 'credit'] %}positive{% else %}negative{% endif %}">
+                            {% if transaction['type'] in ['deposit', 'credit'] %}+{% else %}-{% endif %}₹{{ "%.2f"|format(transaction['amount']) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+                        No recent transactions
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Portfolio Summary -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Portfolio Summary</h3>
+                <a href="{{ url_for('portfolio') }}" style="color: var(--primary); text-decoration: none; font-size: 0.875rem;">View Details →</a>
+            </div>
+            <div class="card-body">
+                {% if portfolio %}
+                    {% for holding in portfolio[:5] %}
+                    <div class="transaction-item">
+                        <div class="transaction-details">
+                            <div class="transaction-type">{{ holding['symbol'] }}</div>
+                            <div class="transaction-date">{{ holding['quantity'] }} units</div>
+                        </div>
+                        <div class="transaction-amount">
+                            ₹{{ "%.2f"|format(holding['quantity'] * holding['buy_price']) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; padding: 2rem 0;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                            Start building your portfolio
+                        </p>
+                        <a href="{{ url_for('trade') }}" class="btn btn-primary btn-sm">Start Trading</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card" style="margin-top: 3rem;">
+        <div class="card-header">
+            <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div class="card-body">
+            <div class="grid grid-4">
+                <a href="{{ url_for('add_expense') }}" class="btn btn-secondary" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💸</div>
+                    Add Expense
+                </a>
+                <a href="{{ url_for('add_funds') }}" class="btn btn-secondary" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+                    Add Funds
+                </a>
+                <a href="{{ url_for('trade') }}" class="btn btn-secondary" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                    Trade
+                </a>
+                <a href="{{ url_for('ai_insights') }}" class="btn btn-secondary" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</div>
+                    AI Insights
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Health Score -->
+    <div class="card" style="margin-top: 3rem;">
+        <div class="card-header">
+            <h3 class="card-title">Financial Health Score</h3>
+            <span class="badge badge-success">GOOD</span>
+        </div>
+        <div class="card-body">
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="font-weight: 600;">Overall Score</span>
+                    <span style="font-weight: 700; color: var(--success);">75/100</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 75%"></div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                <div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Savings Rate</div>
+                    <div style="font-weight: 700; color: var(--primary);">18%</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Expense Control</div>
+                    <div style="font-weight: 700; color: var(--success);">Good</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Investment Growth</div>
+                    <div style="font-weight: 700; color: var(--success);">+12.5%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

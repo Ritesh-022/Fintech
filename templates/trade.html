@@ -1,0 +1,534 @@
+{% extends "base.html" %}
+
+{% block title %}Trade - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1>Live Trading Hub 📊</h1>
+    
+    <!-- Market Overview -->
+    <div class="dashboard-grid" style="margin-bottom: 3rem;">
+        <div class="stat-card">
+            <div class="stat-label">Available Balance</div>
+            <div class="stat-value" id="wallet-balance">₹0.00</div>
+            <div class="stat-change">Ready to trade</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Portfolio Value</div>
+            <div class="stat-value" id="portfolio-value">₹0.00</div>
+            <div class="stat-change positive">+0.0%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Today's P&L</div>
+            <div class="stat-value" id="daily-pnl">₹0.00</div>
+            <div class="stat-change">0.0%</div>
+        </div>
+    </div>
+
+    <!-- Trading Categories -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-header">
+            <h3 class="card-title">Trading Categories</h3>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <button class="btn btn-primary" onclick="switchCategory('stocks')">📈 Stocks</button>
+                <button class="btn btn-outline" onclick="switchCategory('crypto')">₿ Crypto</button>
+                <button class="btn btn-outline" onclick="switchCategory('commodities')">🥇 Commodities</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Data Grid -->
+    <div class="card" style="margin-bottom: 3rem;">
+        <div class="card-header">
+            <h3 class="card-title" id="market-title">Top Stocks</h3>
+            <div id="loading" style="display: none;">Loading...</div>
+        </div>
+        <div class="card-body">
+            <div id="market-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+                <!-- Market data will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="card" id="chart-section" style="margin-bottom: 3rem; display: none;">
+        <div class="card-header">
+            <h3 class="card-title" id="chart-title">Price Chart</h3>
+            <div>
+                <button class="btn btn-sm btn-outline" onclick="changePeriod('1D')">1D</button>
+                <button class="btn btn-sm btn-outline" onclick="changePeriod('1W')">1W</button>
+                <button class="btn btn-sm btn-primary" onclick="changePeriod('1M')">1M</button>
+                <button class="btn btn-sm btn-outline" onclick="changePeriod('3M')">3M</button>
+                <button class="btn btn-sm btn-outline" onclick="changePeriod('1Y')">1Y</button>
+                <button class="btn btn-sm btn-danger" onclick="closeChart()">Close</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <canvas id="priceChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- Trading Form -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Place Order</h3>
+        </div>
+        <div class="card-body">
+            <form id="trade-form">
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label>Select Asset</label>
+                        <select id="asset-select" class="form-control" required>
+                            <option value="">Choose an asset...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Order Type</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="button" class="btn btn-success" onclick="setOrderType('buy')">BUY</button>
+                            <button type="button" class="btn btn-danger" onclick="setOrderType('sell')">SELL</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="quantity" class="form-control" min="0.001" step="0.001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="price" class="form-control" step="0.01" required readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span>Total Amount:</span>
+                        <strong id="total-amount">₹0.00</strong>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Place Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentCategory = 'stocks';
+let selectedAsset = null;
+let orderType = 'buy';
+let marketData = {};
+let priceChart = null;
+let currentPeriod = '1M';
+let chartAsset = null;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    loadWalletBalance();
+    switchCategory('stocks');
+    setupFormListeners();
+    initChart();
+});
+
+// Switch trading category
+async function switchCategory(category) {
+    currentCategory = category;
+    
+    // Update button states - fix event target issue
+    const buttons = document.querySelectorAll('.card-body .btn');
+    buttons.forEach(btn => {
+        if (btn.textContent.includes(category === 'stocks' ? '📈' : category === 'crypto' ? '₿' : '🥇')) {
+            btn.className = 'btn btn-primary';
+        } else {
+            btn.className = 'btn btn-outline';
+        }
+    });
+    
+    // Update title
+    const titles = {
+        'stocks': 'Top Stocks',
+        'crypto': 'Top Cryptocurrencies', 
+        'commodities': 'Top Commodities'
+    };
+    document.getElementById('market-title').textContent = titles[category];
+    
+    // Load market data
+    await loadMarketData(category);
+}
+
+// Load market data
+async function loadMarketData(category) {
+    const loading = document.getElementById('loading');
+    const grid = document.getElementById('market-grid');
+    
+    loading.style.display = 'block';
+    grid.innerHTML = '';
+    
+    try {
+        const response = await fetch(`/api/market-data/${category}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        marketData[category] = data;
+        displayMarketData(data);
+        updateAssetSelect(data);
+        
+    } catch (error) {
+        console.error('Error loading market data:', error);
+        grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Error loading market data</p>';
+    } finally {
+        loading.style.display = 'none';
+    }
+}
+
+// Display market data
+function displayMarketData(data) {
+    const grid = document.getElementById('market-grid');
+    grid.innerHTML = '';
+    
+    data.forEach(asset => {
+        const card = document.createElement('div');
+        card.className = 'asset-card';
+        card.style.cssText = `
+            background: var(--bg-elevated);
+            padding: 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            height: 120px;
+        `;
+        
+        const changeColor = asset.change_24h >= 0 ? 'var(--success)' : 'var(--danger)';
+        const changeIcon = asset.change_24h >= 0 ? '↗' : '↘';
+        const currency = currentCategory === 'crypto' ? '$' : '₹';
+        
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.25rem;">${asset.symbol}</div>
+                    <div style="color: var(--text-secondary); font-size: 0.875rem;">${asset.name}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem;">
+                        ${currency}${asset.price.toFixed(2)}
+                    </div>
+                    <div style="color: ${changeColor}; font-size: 0.875rem; display: flex; align-items: center; gap: 0.25rem;">
+                        <span>${changeIcon}</span>
+                        ${asset.change_24h >= 0 ? '+' : ''}${asset.change_24h.toFixed(2)}%
+                    </div>
+                </div>
+            </div>
+            ${asset.market_cap > 0 ? `
+                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                    Market Cap: ${formatMarketCap(asset.market_cap)}
+                </div>
+            ` : ''}
+        `;
+        
+        card.addEventListener('click', () => {
+            selectAsset(asset);
+            showChart(asset);
+        });
+        card.addEventListener('mouseenter', () => {
+            card.style.borderColor = 'var(--primary)';
+            card.style.transform = 'translateY(-2px)';
+        });
+        card.addEventListener('mouseleave', () => {
+            if (selectedAsset?.symbol !== asset.symbol) {
+                card.style.borderColor = 'transparent';
+                card.style.transform = 'translateY(0)';
+            }
+        });
+
+        
+        grid.appendChild(card);
+    });
+}
+
+// Format market cap for Indian market
+function formatMarketCap(marketCap) {
+    if (currentCategory === 'crypto') {
+        if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(1)}T`;
+        if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(1)}B`;
+        if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(1)}M`;
+        return `$${marketCap.toLocaleString()}`;
+    } else {
+        // Indian market cap in crores
+        if (marketCap >= 1e12) return `₹${(marketCap / 1e12).toFixed(1)}L Cr`;
+        if (marketCap >= 1e10) return `₹${(marketCap / 1e10).toFixed(1)}K Cr`;
+        if (marketCap >= 1e7) return `₹${(marketCap / 1e7).toFixed(1)} Cr`;
+        return `₹${marketCap.toLocaleString()}`;
+    }
+}
+
+// Update asset select dropdown
+function updateAssetSelect(data) {
+    const select = document.getElementById('asset-select');
+    select.innerHTML = '<option value="">Choose an asset...</option>';
+    
+    data.forEach(asset => {
+        const option = document.createElement('option');
+        option.value = asset.symbol;
+        option.textContent = `${asset.symbol} - ${currentCategory === 'crypto' ? '$' : '₹'}${asset.price.toFixed(2)}`;
+        select.appendChild(option);
+    });
+}
+
+// Select asset
+function selectAsset(asset) {
+    selectedAsset = asset;
+    document.getElementById('asset-select').value = asset.symbol;
+    document.getElementById('price').value = asset.price.toFixed(2);
+    updateTotalAmount();
+    
+    // Highlight selected card - fix event target issue
+    document.querySelectorAll('.asset-card').forEach(card => {
+        card.style.borderColor = 'transparent';
+        card.style.transform = 'translateY(0)';
+    });
+    
+    // Find and highlight the clicked card
+    const cards = document.querySelectorAll('.asset-card');
+    cards.forEach(card => {
+        if (card.querySelector('div div').textContent === asset.symbol) {
+            card.style.borderColor = 'var(--primary)';
+            card.style.transform = 'translateY(-2px)';
+        }
+    });
+}
+
+// Set order type
+function setOrderType(type) {
+    orderType = type;
+    document.querySelectorAll('.btn-success, .btn-danger').forEach(btn => {
+        btn.className = btn.textContent === type.toUpperCase() ? 
+            (type === 'buy' ? 'btn btn-success' : 'btn btn-danger') : 
+            'btn btn-outline';
+    });
+}
+
+// Update total amount
+function updateTotalAmount() {
+    const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const total = quantity * price;
+    document.getElementById('total-amount').textContent = `${currentCategory === 'crypto' ? '$' : '₹'}${total.toFixed(2)}`;
+}
+
+// Setup form listeners
+function setupFormListeners() {
+    document.getElementById('quantity').addEventListener('input', updateTotalAmount);
+    document.getElementById('price').addEventListener('input', updateTotalAmount);
+    
+    document.getElementById('asset-select').addEventListener('change', function() {
+        const symbol = this.value;
+        if (symbol && marketData[currentCategory]) {
+            const asset = marketData[currentCategory].find(a => a.symbol === symbol);
+            if (asset) {
+                selectedAsset = asset;
+                document.getElementById('price').value = asset.price.toFixed(2);
+                updateTotalAmount();
+            }
+        } else {
+            document.getElementById('price').value = '';
+            updateTotalAmount();
+        }
+    });
+}
+
+// Load wallet balance
+async function loadWalletBalance() {
+    try {
+        const response = await fetch('/api/wallet');
+        const data = await response.json();
+        document.getElementById('wallet-balance').textContent = `₹${data.balance.toFixed(2)}`;
+    } catch (error) {
+        console.error('Error loading balance:', error);
+    }
+}
+
+// Handle form submission
+document.getElementById('trade-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const assetSymbol = document.getElementById('asset-select').value;
+    const quantity = parseFloat(document.getElementById('quantity').value);
+    const price = parseFloat(document.getElementById('price').value);
+    
+    if (!assetSymbol || !quantity || !price) {
+        alert('Please fill all fields');
+        return;
+    }
+    
+    const total = quantity * price;
+    const currency = currentCategory === 'crypto' ? '$' : '₹';
+    const confirmMsg = `Confirm ${orderType.toUpperCase()} ${quantity} ${assetSymbol} at ${currency}${price.toFixed(2)} (Total: ${currency}${total.toFixed(2)})?`;
+    
+    if (confirm(confirmMsg)) {
+        try {
+            const response = await fetch('/trade/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    symbol: assetSymbol,
+                    type: orderType,
+                    action: orderType,
+                    quantity: quantity,
+                    price: price,
+                    asset_type: currentCategory
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(`Order placed successfully! ${orderType.toUpperCase()} ${quantity} ${assetSymbol}`);
+                document.getElementById('trade-form').reset();
+                document.getElementById('price').value = '';
+                document.getElementById('total-amount').textContent = '₹0.00';
+                loadWalletBalance();
+                selectedAsset = null;
+            } else {
+                alert(`Order failed: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('Trade error:', error);
+            alert('Network error. Please try again.');
+        }
+    }
+});
+
+// Initialize default order type
+setOrderType('buy');
+
+// Initialize chart
+function initChart() {
+    const ctx = document.getElementById('priceChart');
+    if (ctx) {
+        priceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Price (USD)',
+                    data: [],
+                    borderColor: getChartLineColor(),
+                    backgroundColor: getChartFillColor(),
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'var(--text-primary)'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: 'var(--text-secondary)' },
+                        grid: { color: 'var(--border)' }
+                    },
+                    y: {
+                        ticks: { color: 'var(--text-secondary)' },
+                        grid: { color: 'var(--border)' }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Get chart line color based on theme
+function getChartLineColor() {
+    const theme = document.body.getAttribute('data-theme');
+    return theme === 'light' ? '#000000' : '#FFFFFF';
+}
+
+// Get chart fill color based on theme
+function getChartFillColor() {
+    const theme = document.body.getAttribute('data-theme');
+    return theme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+}
+
+// Show chart for any asset type
+async function showChart(asset) {
+    try {
+        chartAsset = asset;
+        document.getElementById('chart-title').textContent = `${asset.name} (${asset.symbol}) - ${currentPeriod} Chart`;
+        document.getElementById('chart-section').style.display = 'block';
+        
+        // Update period button states
+        updatePeriodButtons();
+        
+        // Scroll to chart
+        document.getElementById('chart-section').scrollIntoView({ behavior: 'smooth' });
+        
+        await loadChartData();
+        
+    } catch (error) {
+        console.error('Error showing chart:', error);
+        alert('Error loading chart data');
+    }
+}
+
+// Load chart data for current asset and period
+async function loadChartData() {
+    if (!chartAsset) return;
+    
+    try {
+        const response = await fetch(`/api/chart/${currentCategory}/${chartAsset.symbol}/${currentPeriod}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        priceChart.data.labels = data.labels;
+        priceChart.data.datasets[0].data = data.prices;
+        priceChart.data.datasets[0].label = `${chartAsset.symbol} Price (${currentCategory === 'crypto' ? 'USD' : 'INR'})`;
+        priceChart.data.datasets[0].borderColor = getChartLineColor();
+        priceChart.data.datasets[0].backgroundColor = getChartFillColor();
+        priceChart.update();
+        
+    } catch (error) {
+        console.error('Error loading chart data:', error);
+        alert('Error loading chart data');
+    }
+}
+
+// Change chart period
+async function changePeriod(period) {
+    currentPeriod = period;
+    updatePeriodButtons();
+    
+    if (chartAsset) {
+        document.getElementById('chart-title').textContent = `${chartAsset.name} (${chartAsset.symbol}) - ${period} Chart`;
+        await loadChartData();
+    }
+}
+
+// Update period button states
+function updatePeriodButtons() {
+    document.querySelectorAll('.card-header .btn-sm').forEach(btn => {
+        if (btn.textContent === 'Close') return;
+        btn.className = btn.textContent === currentPeriod ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline';
+    });
+}
+
+// Close chart
+function closeChart() {
+    document.getElementById('chart-section').style.display = 'none';
+    chartAsset = null;
+}
+</script>
+{% endblock %}

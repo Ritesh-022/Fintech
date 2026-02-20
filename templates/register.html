@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Register - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 0; max-width: 500px;">
+    <div class="card" style="padding: 3rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div class="logo" style="font-size: 2rem; margin-bottom: 0.5rem;">
+                FinTech<span style="color: var(--secondary);">AI</span>
+            </div>
+            <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;">Create Your Account</h2>
+            <p style="color: var(--text-secondary);">Start your journey to financial intelligence</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" 
+                       name="username" 
+                       class="form-control" 
+                       placeholder="Choose a username"
+                       required
+                       minlength="3">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" 
+                       name="email" 
+                       class="form-control" 
+                       placeholder="Enter your email"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" 
+                       name="password" 
+                       id="password"
+                       class="form-control" 
+                       placeholder="Create a strong password"
+                       required
+                       minlength="8">
+                <small style="color: var(--text-secondary); font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                    At least 8 characters with uppercase, lowercase, and number
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" 
+                       name="confirm_password" 
+                       id="confirm_password"
+                       class="form-control" 
+                       placeholder="Confirm your password"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--text-secondary); cursor: pointer;">
+                    <input type="checkbox" required style="margin-top: 0.25rem; cursor: pointer;">
+                    <span style="font-size: 0.875rem;">
+                        I agree to the <a href="#" style="color: var(--primary); text-decoration: none;">Terms of Service</a> 
+                        and <a href="#" style="color: var(--primary); text-decoration: none;">Privacy Policy</a>
+                    </span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                Create Account
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                Already have an account? 
+                <a href="{{ url_for('login') }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign in</a>
+            </p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary); font-size: 0.875rem;">
+        <p>🔒 Your data is encrypted and secure</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        showAlert('Passwords do not match!', 'error');
+        return;
+    }
+    
+    if (!validateForm('registerForm')) {
+        e.preventDefault();
+        showAlert('Please fill in all required fields correctly', 'error');
+    }
+});
+</script>
+{% endblock %}

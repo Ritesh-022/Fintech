@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 3rem;">Analytics & Insights 📊</h1>
+
+    <!-- Stats Grid -->
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Expenses</div>
+            <div class="stat-value">
+                ₹{% if expenses_by_category %}{{ "%.2f"|format(expenses_by_category|map(attribute='total')|sum) }}{% else %}0.00{% endif %}
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Categories</div>
+            <div class="stat-value">{{ expenses_by_category|length }}</div>
+        </div>
+    </div>
+
+    <!-- Expenses by Category -->
+    <div class="grid grid-2" style="margin-top: 3rem;">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Expenses by Category</h3>
+            </div>
+            <div class="card-body">
+                {% if expenses_by_category %}
+                    {% for item in expenses_by_category %}
+                    <div class="transaction-item">
+                        <div class="transaction-details">
+                            <div class="transaction-type">{{ item['category']|title }}</div>
+                        </div>
+                        <div class="transaction-amount">₹{{ "%.2f"|format(item['total']) }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <p style="color: var(--text-secondary);">No expense data available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Monthly Trend -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">6-Month Trend</h3>
+            </div>
+            <div class="card-body">
+                {% if monthly_expenses %}
+                    {% for month in monthly_expenses %}
+                    <div class="transaction-item">
+                        <div class="transaction-details">
+                            <div class="transaction-type">{{ month['month'] }}</div>
+                        </div>
+                        <div class="transaction-amount">₹{{ "%.2f"|format(month['total']) }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <p style="color: var(--text-secondary);">No monthly data available</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    if (document.querySelector('canvas')) {
+        // Chart.js visualization can be added here
+        console.log('Analytics page loaded');
+    }
+</script>
+{% endblock %}

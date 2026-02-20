@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Verify OTP - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 0; max-width: 500px;">
+    <div class="card" style="padding: 3rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">✉️</div>
+            <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;">Verify Your Identity</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">We sent a 6-digit code to <strong>{{ email }}</strong></p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 0.5rem; 
+                                background-color: {% if category == 'error' %}rgba(239, 68, 68, 0.1){% elif category == 'success' %}rgba(34, 197, 94, 0.1){% else %}rgba(59, 130, 246, 0.1){% endif %};
+                                border-left: 4px solid {% if category == 'error' %}#ef4444{% elif category == 'success' %}#22c55e{% else %}#3b82f6{% endif %};">
+                        <p style="margin: 0; color: {% if category == 'error' %}#dc2626{% elif category == 'success' %}#16a34a{% else %}#1e40af{% endif %};">
+                            {{ message }}
+                        </p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('verify_otp') }}" id="otpForm">
+            <div class="form-group">
+                <label class="form-label">Verification Code</label>
+                <input type="text" 
+                       name="otp" 
+                       class="form-control" 
+                       placeholder="Enter 6-digit code"
+                       maxlength="6"
+                       required
+                       style="font-size: 1.5rem; letter-spacing: 0.5rem; text-align: center; font-weight: 600;">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input type="password" 
+                       name="new_password" 
+                       class="form-control" 
+                       placeholder="Enter your new password"
+                       required
+                       minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" 
+                       name="confirm_password" 
+                       class="form-control" 
+                       placeholder="Confirm your new password"
+                       required
+                       minlength="6">
+            </div>
+
+            <div style="background-color: rgba(96, 165, 250, 0.1); border-left: 4px solid #60a5fa; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                <p style="margin: 0; margin-bottom: 0.5rem;"><strong>Password Requirements:</strong></p>
+                <ul style="margin: 0; padding-left: 1.5rem;">
+                    <li>At least 8 characters long</li>
+                    <li>At least one uppercase letter</li>
+                    <li>At least one lowercase letter</li>
+                    <li>At least one number</li>
+                </ul>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                Reset Password
+            </button>
+
+            <a href="{{ url_for('forgot_password') }}" class="btn btn-secondary" style="width: 100%; text-align: center; text-decoration: none; display: block;">
+                Send Another Code
+            </a>
+        </form>
+
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                Remember it now?
+                <a href="{{ url_for('login') }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">Go to login</a>
+            </p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary); font-size: 0.875rem;">
+        <p>🔒 Your passwords are encrypted end-to-end</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('otpForm').addEventListener('submit', function(e) {
+    const otp = document.querySelector('input[name="otp"]').value.trim();
+    const newPwd = document.querySelector('input[name="new_password"]').value;
+    const confirmPwd = document.querySelector('input[name="confirm_password"]').value;
+    
+    if (!otp || otp.length !== 6) {
+        e.preventDefault();
+        showAlert('Please enter a valid 6-digit code', 'error');
+        return;
+    }
+    
+    if (!newPwd || !confirmPwd) {
+        e.preventDefault();
+        showAlert('Please enter both passwords', 'error');
+        return;
+    }
+    
+    if (newPwd !== confirmPwd) {
+        e.preventDefault();
+        showAlert('Passwords do not match', 'error');
+        return;
+    }
+    
+    if (newPwd.length < 8) {
+        e.preventDefault();
+        showAlert('Password must be at least 8 characters long', 'error');
+        return;
+    }
+});
+
+// Only allow digits in OTP field
+document.querySelector('input[name="otp"]').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+{% endblock %}

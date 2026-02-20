@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Access Denied - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 6rem 0; text-align: center; min-height: 60vh; display: flex; align-items: center; justify-content: center;">
+    <div>
+        <h1 style="font-size: 5rem; font-weight: 900; color: var(--warning); margin-bottom: 1rem;">403</h1>
+        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">Access Denied</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.125rem;">
+            You don't have permission to access this resource.
+        </p>
+        {% if session.user_id %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Login</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+        <div>
+            <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem;">Expense Tracker 💸</h1>
+            <p style="color: var(--text-secondary);">Monitor and control your spending</p>
+        </div>
+        <a href="{{ url_for('add_expense') }}" class="btn btn-primary">+ Add Expense</a>
+    </div>
+
+    <!-- Expense Summary -->
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <div class="stat-label">This Month</div>
+            <div class="stat-value">₹{% if expenses %}{{ "%.2f"|format(expenses|sum(attribute='amount')) }}{% else %}0.00{% endif %}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Average per Day</div>
+            <div class="stat-value">₹{% if expenses %}{{ "%.2f"|format((expenses|sum(attribute='amount')) / 30) }}{% else %}0.00{% endif %}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Expenses</div>
+            <div class="stat-value">{{ expenses|length }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Top Category</div>
+            <div class="stat-value" style="font-size: 1.5rem;">{% if expenses %}{{ expenses[0]['category']|title }}{% else %}None{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- Expense List -->
+    <div class="card" style="margin-top: 3rem;">
+        <div class="card-header">
+            <h3 class="card-title">All Expenses</h3>
+            <select class="form-control" style="width: auto; padding: 0.5rem 1rem;" onchange="filterExpenses(this.value)">
+                <option value="all">All Categories</option>
+                <option value="food">Food</option>
+                <option value="travel">Travel</option>
+                <option value="bills">Bills</option>
+                <option value="shopping">Shopping</option>
+                <option value="subscriptions">Subscriptions</option>
+                <option value="misc">Miscellaneous</option>
+            </select>
+        </div>
+        <div class="card-body">
+            {% if expenses %}
+                <div class="table" style="overflow-x: auto;">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Notes</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expenses %}
+                            <tr class="expense-row" data-category="{{ expense['category'] }}">
+                                <td>{{ expense['expense_date'] }}</td>
+                                <td>
+                                    <span class="badge badge-primary">{{ expense['category']|upper }}</span>
+                                </td>
+                                <td>{{ expense['notes'] or '-' }}</td>
+                                <td style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: var(--danger);">
+                                    -₹{{ "%.2f"|format(expense['amount']) }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 3rem 0;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📊</div>
+                    <h3 style="margin-bottom: 0.5rem;">No Expenses Recorded</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                        Start tracking your expenses to gain insights
+                    </p>
+                    <a href="{{ url_for('add_expense') }}" class="btn btn-primary">Add First Expense</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterExpenses(category) {
+    const rows = document.querySelectorAll('.expense-row');
+    rows.forEach(row => {
+        if (category === 'all' || row.dataset.category === category) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

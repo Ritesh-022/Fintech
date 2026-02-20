@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1>My Portfolio 📈</h1>
+
+    <!-- Portfolio Summary -->
+    <div class="dashboard-grid" style="margin-bottom: 3rem;">
+        <div class="stat-card">
+            <div class="stat-label">Total Holdings</div>
+            <div class="stat-value">
+                {% if holdings %}
+                    {% set total_value = 0 %}
+                    {% for holding in holdings %}
+                        {% set total_value = total_value + (holding.quantity * (holding.current_price or holding.buy_price)) %}
+                    {% endfor %}
+                    ₹{{ "%.2f"|format(total_value) }}
+                {% else %}
+                    ₹0.00
+                {% endif %}
+            </div>
+            <div class="stat-change positive">Portfolio Value</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Stocks</div>
+            <div class="stat-value">{{ holdings|length if holdings else 0 }}</div>
+            <div class="stat-change">Different Holdings</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Today's P&L</div>
+            <div class="stat-value positive">+₹0.00</div>
+            <div class="stat-change positive">+0.00%</div>
+        </div>
+    </div>
+
+    <!-- Holdings Table -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Current Holdings</h3>
+            <a href="{{ url_for('trade') }}" class="btn btn-primary btn-sm">Trade Now</a>
+        </div>
+        <div class="card-body">
+            {% if holdings %}
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border);">
+                                <th style="padding: 1rem; text-align: left;">Symbol</th>
+                                <th style="padding: 1rem; text-align: right;">Quantity</th>
+                                <th style="padding: 1rem; text-align: right;">Avg Price</th>
+                                <th style="padding: 1rem; text-align: right;">Current Price</th>
+                                <th style="padding: 1rem; text-align: right;">Market Value</th>
+                                <th style="padding: 1rem; text-align: right;">P&L</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for holding in holdings %}
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <td style="padding: 1rem;">
+                                    <div style="font-weight: 700;">{{ holding.symbol|upper }}</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.875rem;">{{ holding.asset_type|title if holding.asset_type else 'Stock' }}</div>
+                                </td>
+                                <td style="padding: 1rem; text-align: right;">{{ holding.quantity|int }}</td>
+                                <td style="padding: 1rem; text-align: right;">₹{{ "%.2f"|format(holding.buy_price) }}</td>
+                                <td style="padding: 1rem; text-align: right;">₹{{ "%.2f"|format(holding.current_price or holding.buy_price) }}</td>
+                                <td style="padding: 1rem; text-align: right;">₹{{ "%.2f"|format(holding.quantity * (holding.current_price or holding.buy_price)) }}</td>
+                                <td style="padding: 1rem; text-align: right;">
+                                    {% set pnl = (holding.current_price or holding.buy_price) - holding.buy_price %}
+                                    {% set total_pnl = pnl * holding.quantity %}
+                                    <div style="color: {% if total_pnl >= 0 %}var(--success){% else %}var(--danger){% endif %};">
+                                        {% if total_pnl >= 0 %}+{% endif %}₹{{ "%.2f"|format(total_pnl) }}
+                                    </div>
+                                    <div style="color: {% if pnl >= 0 %}var(--success){% else %}var(--danger){% endif %}; font-size: 0.875rem;">
+                                        {% if pnl >= 0 %}+{% endif %}{{ "%.2f"|format((pnl/holding.buy_price)*100) }}%
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                    <h3 style="margin-bottom: 1rem;">No Holdings Yet</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Start your investment journey by trading stocks</p>
+                    <a href="{{ url_for('trade') }}" class="btn btn-primary">Start Trading</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if holdings %}
+    <!-- Portfolio Chart -->
+    <div class="card" style="margin-top: 3rem;">
+        <div class="card-header">
+            <h3 class="card-title">Portfolio Distribution</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="portfolioChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if holdings %}
+<script>
+// Portfolio chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('portfolioChart').getContext('2d');
+    
+    const holdings = {{ holdings|tojson }};
+    const labels = holdings.map(h => h.symbol);
+    const data = holdings.map(h => h.quantity * (h.current_price || h.buy_price));
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                    '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+
+{% block title %}FinTech Intelligence Platform - Smart Financial Management{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; position: relative;">
+    <!-- Background gradient effect -->
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 30% 50%, rgba(0, 102, 255, 0.1) 0%, transparent 50%); pointer-events: none;"></div>
+    
+    <div class="container" style="text-align: center; position: relative; z-index: 1;">
+        <div style="margin-bottom: 2rem;">
+            <span style="display: inline-block; background: rgba(0, 102, 255, 0.2); color: var(--primary); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600;">Trusted by Thousands of Users Worldwide</span>
+        </div>
+        
+        <h1 class="hero-title" style="margin-bottom: 1.5rem;">Master Your Money with<br><span style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">AI Intelligence</span></h1>
+        
+        <p class="hero-subtitle" style="max-width: 600px; margin: 0 auto 2rem;">
+            Your personal financial companion for smarter money management, intelligent investing, 
+            comprehensive expense tracking, and achieving long-term financial goals with AI-powered insights.
+        </p>
+        
+        <div class="hero-buttons" style="justify-content: center; gap: 1rem;">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg" style="min-width: 200px;">
+                🚀 Get Started For Free
+            </a>
+            <a href="#features" class="btn btn-outline btn-lg" style="min-width: 200px;">
+                Learn More ↓
+            </a>
+        </div>
+        
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">💳 No credit card required • ⚡ Start in 60 seconds • 🔒 Bank-level security</p>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section style="padding: 3rem 0; background: rgba(0, 102, 255, 0.05); border-y: 1px solid rgba(0, 102, 255, 0.1);">
+    <div class="container">
+        <div class="grid grid-4">
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--primary); margin-bottom: 0.5rem;">10K+</div>
+                <p style="color: var(--text-secondary);">Active Users</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--primary); margin-bottom: 0.5rem;">₹50Cr+</div>
+                <p style="color: var(--text-secondary);">Tracked Transactions</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--primary); margin-bottom: 0.5rem;">99.9%</div>
+                <p style="color: var(--text-secondary);">Uptime</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--primary); margin-bottom: 0.5rem;">5⭐</div>
+                <p style="color: var(--text-secondary);">User Rating</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section style="padding: 6rem 0;" id="features">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem;">Everything You Need</h2>
+            <p style="color: var(--text-secondary); font-size: 1.125rem; max-width: 600px; margin: 0 auto;">
+                Powerful features designed specifically for modern financial management and wealth building
+            </p>
+        </div>
+
+        <div class="grid grid-3">
+            <!-- Feature 1 -->
+            <div class="card" style="transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size: 3rem; margin-bottom: 1.5rem;">💰</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Smart Wallet</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Manage multiple wallets with ease. Track deposits, withdrawals, and transfers in real-time with instant notifications.
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Real-time balance updates</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Transaction history</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem;">✓ Secure transfers</li>
+                </ul>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="card" style="transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size: 3rem; margin-bottom: 1.5rem;">📊</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Expense Tracking</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Categorize expenses automatically and get intelligent insights to optimize your spending patterns.
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Auto-categorization</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Visual charts</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem;">✓ Budget alerts</li>
+                </ul>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="card" style="transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size: 3rem; margin-bottom: 1.5rem;">📈</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Paper Trading</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Practice trading stocks, crypto, and commodities without risk. Learn and perfect your strategy risk-free.
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Demo account</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Live market data</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem;">✓ No real money</li>
+                </ul>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="card" style="transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size: 3rem; margin-bottom: 1.5rem;">🎯</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Savings Goals</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Set and track multiple financial goals. Get AI recommendations to reach your goals faster and smarter.
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Progress tracking</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Milestone alerts</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem;">✓ Smart recommendations</li>
+                </ul>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="card" style="transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size: 3rem; margin-bottom: 1.5rem;">🤖</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">AI Financial Advisor</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Get personalized financial advice powered by advanced AI. Context-aware suggestions for every situation.
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ 24/7 availability</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ Personalization</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem;">✓ Real insights</li>
+                </ul>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="card" style="transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size: 3rem; margin-bottom: 1.5rem;">🔒</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem;">Enterprise Security</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6;">
+                    Bank-level encryption and security. Your financial data is protected with the highest industry standards.
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ End-to-end encryption</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">✓ PIN + 2FA</li>
+                    <li style="color: var(--text-secondary); font-size: 0.875rem;">✓ Privacy guaranteed</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section style="padding: 6rem 0; background: var(--bg-card);">
+    <div class="container">
+        <div class="grid grid-2" style="align-items: center; gap: 4rem;">
+            <div>
+                <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1.5rem;">Advanced Analytics</h2>
+                <p style="color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 2rem; line-height: 1.8;">
+                    Visualize your complete financial picture with beautiful, interactive charts. Track spending patterns, monitor investment performance, and make data-driven financial decisions with confidence.
+                </p>
+                <ul style="list-style: none; padding: 0; gap: 1rem; display: flex; flex-direction: column;">
+                    <li style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="background: var(--success); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+                        <span style="color: var(--text-secondary);">Category-wise expense breakdown with visual pie charts</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="background: var(--success); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+                        <span style="color: var(--text-secondary);">Monthly and yearly spending trend analysis</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="background: var(--success); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+                        <span style="color: var(--text-secondary);">Portfolio performance tracking and comparison</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="background: var(--success); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+                        <span style="color: var(--text-secondary);">Financial health score and recommendations</span>
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="background: var(--success); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</span>
+                        <span style="color: var(--text-secondary);">Export reports in multiple formats</span>
+                    </li>
+                </ul>
+            </div>
+            <div style="background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%); border: 1px solid rgba(0, 102, 255, 0.2); border-radius: 12px; padding: 2rem; text-align: center; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="font-size: 5rem; margin-bottom: 1rem;">📊</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Beautiful Dashboards</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Professional-grade analytics with interactive charts and real-time data visualization designed for clarity and insights.
+                </p>
+                <div style="background: var(--bg-elevated); padding: 1.5rem; border-radius: 8px; width: 100%; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--text-secondary);">Income</span>
+                        <span style="color: var(--success); font-weight: 700;">₹45,000</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-secondary);">Expenses</span>
+                        <span style="color: var(--danger); font-weight: 700;">₹12,500</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section style="padding: 6rem 0;">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem;">How It Works</h2>
+            <p style="color: var(--text-secondary); font-size: 1.125rem;">Get started in just 3 simple steps</p>
+        </div>
+
+        <div class="grid grid-3">
+            <div style="text-align: center;">
+                <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; color: white; font-weight: 700;">1</div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Sign Up Free</h3>
+                <p style="color: var(--text-secondary);">
+                    Create your account in 60 seconds. No credit card required, just an email address.
+                </p>
+            </div>
+            <div style="text-align: center;">
+                <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; color: white; font-weight: 700;">2</div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Set It Up</h3>
+                <p style="color: var(--text-secondary);">
+                    Add your wallet balance and start tracking expenses. Configure your preferences.
+                </p>
+            </div>
+            <div style="text-align: center;">
+                <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; color: white; font-weight: 700;">3</div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Get Insights</h3>
+                <p style="color: var(--text-secondary);">
+                    Let AI guide you with personalized recommendations for better financial health.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section style="padding: 6rem 0; background: var(--bg-card);">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem;">Frequently Asked Questions</h2>
+            <p style="color: var(--text-secondary); font-size: 1.125rem;">Everything you need to know</p>
+        </div>
+
+        <div style="max-width: 700px; margin: 0 auto;">
+            <div style="margin-bottom: 1.5rem;">
+                <details style="cursor: pointer; padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; transition: all 0.3s ease;">
+                    <summary style="font-weight: 700; color: var(--text-primary); user-select: none;">Is my data safe?</summary>
+                    <p style="color: var(--text-secondary); margin-top: 1rem;">
+                        Yes! We use bank-level encryption (AES-256) and secure servers. Your financial data is encrypted end-to-end and never shared with third parties.
+                    </p>
+                </details>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <details style="cursor: pointer; padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; transition: all 0.3s ease;">
+                    <summary style="font-weight: 700; color: var(--text-primary); user-select: none;">Do I need a credit card?</summary>
+                    <p style="color: var(--text-secondary); margin-top: 1rem;">
+                        No! You can start completely free. We never ask for credit card details, and there are no hidden charges or surprise fees.
+                    </p>
+                </details>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <details style="cursor: pointer; padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; transition: all 0.3s ease;">
+                    <summary style="font-weight: 700; color: var(--text-primary); user-select: none;">Can I trade with real money?</summary>
+                    <p style="color: var(--text-secondary); margin-top: 1rem;">
+                        Our trading is simulated (paper trading). You practice with virtual money to learn strategies without financial risk.
+                    </p>
+                </details>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <details style="cursor: pointer; padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; transition: all 0.3s ease;">
+                    <summary style="font-weight: 700; color: var(--text-primary); user-select: none;">How accurate is the AI?</summary>
+                    <p style="color: var(--text-secondary); margin-top: 1rem;">
+                        Our AI analyzes your spending patterns and provides recommendations based on financial best practices. Accuracy improves as you use the app more.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section style="padding: 6rem 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
+    <div class="container" style="text-align: center;">
+        <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1.5rem; color: white;">Ready to Master Your Money?</h2>
+        <p style="font-size: 1.125rem; margin-bottom: 2rem; color: rgba(255,255,255,0.9);">
+            Join thousands of users already transforming their financial lives with AI intelligence.
+        </p>
+        <div class="hero-buttons" style="justify-content: center;">
+            <a href="{{ url_for('register') }}" class="btn btn-light" style="background: white; color: var(--primary); font-weight: 700; padding: 1rem 2.5rem; font-size: 1.125rem;">
+                🚀 Get Started Free Today
+            </a>
+        </div>
+        <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.8); font-size: 0.875rem;">
+            💳 No credit card needed • ⚡ 60-second setup • 🔒 100% secure
+        </p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer style="background: var(--bg-card); padding: 3rem 0; border-top: 1px solid var(--border);">
+    <div class="container">
+        <div class="grid grid-4" style="margin-bottom: 2rem;">
+            <div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">Product</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Wallet</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Trading</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Analytics</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">AI Insights</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">Company</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">About</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Blog</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">News</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">Legal</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Privacy Policy</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Terms of Service</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Cookie Policy</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">Follow Us</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Twitter</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">LinkedIn</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">GitHub</a></li>
+                    <li style="margin-top: 0.75rem;"><a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'">Discord</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="border-top: 1px solid var(--border); padding-top: 2rem; text-align: center;">
+            <div class="logo" style="margin-bottom: 1rem;">FinTech<span style="color: var(--secondary);">AI</span></div>
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                © 2024 FinTech Intelligence Platform. All rights reserved. | Secure • Intelligent • Simple
+            </p>
+        </div>
+    </div>
+</footer>
+{% endblock %}

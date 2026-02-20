@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Trade History - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 3rem;">Trade History 📋</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">All Trades</h3>
+        </div>
+        <div class="card-body">
+            {% if trades %}
+            <div class="table" style="overflow-x: auto;">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Asset</th>
+                            <th>Symbol</th>
+                            <th>Action</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trade in trades %}
+                        <tr>
+                            <td>{{ trade['timestamp'][:10] }}</td>
+                            <td>{{ trade['asset_type']|title }}</td>
+                            <td><strong>{{ trade['symbol']|upper }}</strong></td>
+                            <td>
+                                <span class="badge badge-{% if trade['action'] == 'buy' %}success{% else %}danger{% endif %}">
+                                    {{ trade['action']|upper }}
+                                </span>
+                            </td>
+                            <td>{{ trade['quantity'] }}</td>
+                            <td>₹{{ "%.2f"|format(trade['price']) }}</td>
+                            <td>₹{{ "%.2f"|format(trade['total_value']) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 3rem;">
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">No trades yet</p>
+                <a href="{{ url_for('trade') }}" class="btn btn-primary">Start Trading</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

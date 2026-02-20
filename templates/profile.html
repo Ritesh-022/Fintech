@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0; max-width: 600px; margin: 0 auto;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 3rem;">My Profile 👤</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Profile Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" value="{{ user['username'] }}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" value="{{ user['email'] }}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Member Since</label>
+                <input type="text" class="form-control" value="{{ user['created_at'][:10] }}" disabled>
+            </div>
+
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                <a href="{{ url_for('set_pin') }}" class="btn btn-primary btn-sm">Set/Change PIN</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Security -->
+    <div class="card" style="margin-top: 2rem;">
+        <div class="card-header">
+            <h3 class="card-title">Security</h3>
+        </div>
+        <div class="card-body">
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span>Password</span>
+                    <span class="badge badge-success">✓ Set</span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Your account password is secure</p>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span>Transaction PIN</span>
+                    <span class="badge {% if user['pin_hash'] %}badge-success{% else %}badge-warning{% endif %}">
+                        {% if user['pin_hash'] %}✓ Set{% else %}Not Set{% endif %}
+                    </span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">PIN is required for trading and sensitive operations</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Settings -->
+    <div class="card" style="margin-top: 2rem;">
+        <div class="card-header">
+            <h3 class="card-title">Appearance</h3>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 0.25rem;">Theme</div>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Choose your preferred theme</p>
+                </div>
+                <button id="theme-toggle" class="btn btn-secondary btn-sm" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span> <span id="theme-text">Dark</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script>
+function toggleTheme() {
+    const currentTheme = document.body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    updateThemeButton(newTheme);
+    
+    // Save to backend
+    fetch('/api/theme', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme: newTheme })
+    }).catch(console.error);
+}
+
+function updateThemeButton(theme) {
+    const icon = document.getElementById('theme-icon');
+    const text = document.getElementById('theme-text');
+    
+    if (theme === 'dark') {
+        icon.textContent = '🌙';
+        text.textContent = 'Dark';
+    } else {
+        icon.textContent = '☀️';
+        text.textContent = 'Light';
+    }
+}
+
+// Initialize theme button
+document.addEventListener('DOMContentLoaded', function() {
+    const currentTheme = document.body.getAttribute('data-theme');
+    updateThemeButton(currentTheme);
+});
+</script>
+</div>
+{% endblock %}

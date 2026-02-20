@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Error - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 0; text-align: center;">
+    <div class="card" style="max-width: 600px; margin: 0 auto; padding: 3rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">⚠️</div>
+        <h1 style="color: var(--danger); margin-bottom: 1rem;">Something went wrong</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            {{ error or "An unexpected error occurred. Please try again." }}
+        </p>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                Go to Dashboard
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                Go Home
+            </a>
+        </div>
+        
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                If this problem persists, please contact support.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

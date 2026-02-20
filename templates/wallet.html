@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Wallet - FinTech Intelligence{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 3rem;">My Wallet 💰</h1>
+
+    <!-- Wallet Balances -->
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <div class="stat-label">Main Balance</div>
+            <div class="stat-value">₹{{ "%.2f"|format(wallet['main_balance']) }}</div>
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                <a href="{{ url_for('add_funds') }}" class="btn btn-success btn-sm">Add Funds</a>
+                <a href="{{ url_for('withdraw_funds') }}" class="btn btn-danger btn-sm">Withdraw</a>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Investment Wallet</div>
+            <div class="stat-value">₹{{ "%.2f"|format(wallet['investment_balance']) }}</div>
+            <div class="stat-change positive">
+                <span>↑</span> Locked in investments
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Savings Balance</div>
+            <div class="stat-value">₹{{ "%.2f"|format(wallet['savings_balance']) }}</div>
+            <div class="stat-change positive">
+                <span>↑</span> Safe & growing
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Total Net Worth</div>
+            <div class="stat-value">₹{{ "%.2f"|format(wallet['main_balance'] + wallet['investment_balance'] + wallet['savings_balance']) }}</div>
+            <div class="stat-change positive">
+                <span>↑</span> Combined balance
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="card" style="margin-top: 3rem;">
+        <div class="card-header">
+            <h3 class="card-title">Transaction History</h3>
+            <div style="display: flex; gap: 0.5rem;">
+                <select class="form-control" style="width: auto; padding: 0.5rem 1rem;" onchange="filterTransactions(this.value)">
+                    <option value="all">All Types</option>
+                    <option value="deposit">Deposits</option>
+                    <option value="withdrawal">Withdrawals</option>
+                    <option value="expense">Expenses</option>
+                </select>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if transactions %}
+                <div class="table" style="overflow-x: auto;">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr class="transaction-row" data-type="{{ transaction['type'] }}">
+                                <td>{{ transaction['timestamp'][:10] }}</td>
+                                <td>
+                                    <span class="badge badge-{% if transaction['type'] in ['deposit', 'credit'] %}success{% else %}danger{% endif %}">
+                                        {{ transaction['type']|upper }}
+                                    </span>
+                                </td>
+                                <td>{{ transaction['description'] or 'N/A' }}</td>
+                                <td>{{ transaction['category'] or '-' }}</td>
+                                <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">
+                                    <span class="{% if transaction['type'] in ['deposit', 'credit'] %}text-success{% else %}text-danger{% endif %}">
+                                        {% if transaction['type'] in ['deposit', 'credit'] %}+{% else %}-{% endif %}₹{{ "%.2f"|format(transaction['amount']) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 3rem 0;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">💳</div>
+                    <h3 style="margin-bottom: 0.5rem;">No Transactions Yet</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                        Start by adding funds to your wallet
+                    </p>
+                    <a href="{{ url_for('add_funds') }}" class="btn btn-primary">Add Funds</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterTransactions(type) {
+    const rows = document.querySelectorAll('.transaction-row');
+    rows.forEach(row => {
+        if (type === 'all' || row.dataset.type === type) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}
